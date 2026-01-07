@@ -105,6 +105,23 @@ const App = () => {
     setMoney(prevMoney => prevMoney - fighter.price)
   }
 
+  const totalStrength = (team || []).reduce((acc, currentFighter) => {
+    return acc + currentFighter.strength;
+  }, 0);
+
+  const totalAgility = (team || []).reduce((acc, currentFighter) => {
+    return acc + currentFighter.agility;
+  }, 0);
+
+  const handleRemoveFighter = (member) => {
+    // remove fighter from team via id
+    setTeam(prevTeam => prevTeam.filter(fighter => fighter.id !== member.id)) 
+    // update fighters object state via new array
+    setZombieFighters(prevFighters => [...prevFighters, member])
+    // add price back to available money
+    setMoney(prevMoney => prevMoney + member.price)
+  }
+
   return (
     <>
     <h1>Zombie Fighters</h1>
@@ -131,10 +148,19 @@ const App = () => {
           <p>Price: {member.price}</p>
           <p>Strength: {member.strength}</p>
           <p>Agility: {member.agility}</p>
+          <button onClick={() => handleRemoveFighter(member)}>Delete from Team</button>
         </li>
       ))}
+      </ul>
+      <div>
       {team.length === 0 ? (<p>Pick some team members!</p>) : (<p>You have {team.length} on your team.</p>)}
-    </ul>
+      </div>
+      <div>
+      {team.length === 0 ? (<p>No team members = no team strength!</p>) : (<p>Your team has {totalStrength} total strength.</p>)}
+      </div>
+      <div>
+      {team.length === 0 ? (<p>No team members = no team agility!</p>) : (<p>Your team has {totalAgility} total agility.</p>)}
+      </div>
     </div>
     </>
   );
